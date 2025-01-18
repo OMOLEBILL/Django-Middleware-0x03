@@ -52,6 +52,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "chats.middleware.RequestLoggingMiddleware",
 ]
 
 ROOT_URLCONF = "messaging_app.urls"
@@ -82,12 +83,14 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "messaging_app",
-        "USER": "root",
-        "PASSWORD": "",
+        "USER": "messaging",
+        "PASSWORD": "messaging@2025",
         "HOST": "localhost",
         "PORT": "3306",
     }
 }
+
+AUTH_USER_MODEL = 'chats.user'
 
 
 # Password validation
@@ -149,5 +152,41 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'USER_ID_FIELD': 'user_id',
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'requests.log',  
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'chats.middleware': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        #og everything from your project:
+        # '': {
+        #     'handlers': ['file'],
+        #     'level': 'INFO',
+        # },
+    },
 }
 

@@ -43,7 +43,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsParticipantOfConversation]
+    permission_classes = [IsParticipantOfConversation, permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body']
